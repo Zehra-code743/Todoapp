@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(powershell -ExecutionPolicy Bypass -Command \"if \\(Test-Path ''.specify/scripts/bash/create-phr.sh''\\) { bash .specify/scripts/bash/create-phr.sh --title ''Phase II Implementation Complete'' --stage ''green'' --feature ''002-phase-ii-fullstack-web'' --json } else { echo ''PHR script not found'' }\")",
+      "Bash(taskkill:*)"
+    ]
+  }
+}
