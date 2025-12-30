@@ -1,0 +1,28 @@
+{
+  "name": "todoapp-fullstack",
+  "version": "2.0.0",
+  "description": "Phase II Full-Stack Todo Application - Frontend and Backend",
+  "scripts": {
+    "dev": "concurrently --kill-others-on-fail --prefix \"[{name}]\" --names \"BACKEND,FRONTEND\" -c \"bgBlue.bold,bgMagenta.bold\" \"npm:dev:backend\" \"npm:dev:frontend\"",
+    "dev:backend": "cd backend && ..\\backend\\venv\\Scripts\\python -m uvicorn src.main:app --reload --port 8000",
+    "dev:frontend": "cd frontend && npm run dev",
+    "install:all": "npm install && cd frontend && npm install",
+    "setup:backend": "cd backend && python -m venv venv && venv\\Scripts\\pip install -r requirements.txt",
+    "setup": "npm run setup:backend && npm run install:all",
+    "test:backend": "cd backend && venv\\Scripts\\python -m pytest",
+    "test:frontend": "cd frontend && npm test"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "cross-env": "^7.0.3"
+  },
+  "keywords": [
+    "todo",
+    "fullstack",
+    "nextjs",
+    "fastapi",
+    "postgresql"
+  ],
+  "author": "",
+  "license": "ISC"
+}

@@ -2,21 +2,40 @@
 
 import sys
 from src.manager import TaskManager
-from src.ui import get_user_input, print_success, print_error, format_task_table, confirm_action
+from src.ui import (
+    get_user_input,
+    print_success,
+    print_error,
+    print_warning,
+    print_info,
+    print_header,
+    print_sub_header,
+    print_divider,
+    print_banner,
+    print_menu,
+    print_task_details,
+    confirm_action,
+    format_task_table,
+    console,
+)
 
 
 def main_menu() -> None:
-    """Display the main menu."""
-    print("\n" + "="*50)
-    print("Todo Console App")
-    print("="*50)
-    print("1. Add Task")
-    print("2. View Tasks")
-    print("3. Mark Complete/Incomplete")
-    print("4. Update Task")
-    print("5. Delete Task")
-    print("6. Exit")
-    print("="*50)
+    """Display the main menu using rich styling."""
+    console.clear()
+    print_banner()
+    print_divider("magenta")
+
+    print_menu({
+        "1": "Add a new task",
+        "2": "View all tasks",
+        "3": "Mark task as complete/incomplete",
+        "4": "Update task details",
+        "5": "Delete a task",
+        "6": "Exit application",
+    })
+
+    print_divider("magenta")
 
 
 def add_task(manager: TaskManager) -> None:
@@ -26,7 +45,7 @@ def add_task(manager: TaskManager) -> None:
     Args:
         manager: TaskManager instance
     """
-    print("\n--- Add New Task ---")
+    print_sub_header("Add New Task")
 
     try:
         title = get_user_input("Enter task title: ")
@@ -55,9 +74,13 @@ def view_tasks(manager: TaskManager) -> None:
     Args:
         manager: TaskManager instance
     """
-    print("\n--- All Tasks ---")
+    print_sub_header("All Tasks")
     tasks = manager.get_all_tasks()
-    print(format_task_table(tasks))
+    table = format_task_table(tasks)
+    if isinstance(table, str):
+        print(table)
+    else:
+        console.print(table)
 
 
 def toggle_complete_menu(manager: TaskManager) -> None:
@@ -67,7 +90,7 @@ def toggle_complete_menu(manager: TaskManager) -> None:
     Args:
         manager: TaskManager instance
     """
-    print("\n--- Mark Complete/Incomplete ---")
+    print_sub_header("Mark Complete/Incomplete")
 
     try:
         task_id_str = get_user_input("Enter task ID: ")
@@ -99,7 +122,7 @@ def update_task_menu(manager: TaskManager) -> None:
     Args:
         manager: TaskManager instance
     """
-    print("\n--- Update Task ---")
+    print_sub_header("Update Task")
 
     try:
         task_id_str = get_user_input("Enter task ID: ")
@@ -117,8 +140,8 @@ def update_task_menu(manager: TaskManager) -> None:
             print_error(f"Task not found: ID {task_id}")
             return
 
-        print(f"\nCurrent title: {current_task.title}")
-        print(f"Current description: {current_task.description or '(none)'}")
+        # Show current task details
+        print_task_details(current_task)
 
         # Get updates
         new_title = get_user_input("\nEnter new title (or press Enter to keep current): ").strip()
@@ -126,7 +149,7 @@ def update_task_menu(manager: TaskManager) -> None:
 
         # If both are empty, nothing to update
         if not new_title and not new_description:
-            print("No changes made")
+            print_warning("No changes made")
             return
 
         # Prepare update values (None means keep existing)
@@ -152,7 +175,7 @@ def delete_task_menu(manager: TaskManager) -> None:
     Args:
         manager: TaskManager instance
     """
-    print("\n--- Delete Task ---")
+    print_sub_header("Delete Task")
 
     try:
         task_id_str = get_user_input("Enter task ID: ")
@@ -170,20 +193,17 @@ def delete_task_menu(manager: TaskManager) -> None:
             print_error(f"Task not found: ID {task_id}")
             return
 
-        # Show task details and confirm
-        print(f"\nTask to delete:")
-        print(f"  ID: {task.id}")
-        print(f"  Title: {task.title}")
-        print(f"  Description: {task.description or '(none)'}")
+        # Show task details
+        print_task_details(task)
 
-        if confirm_action("\nAre you sure you want to delete this task?"):
+        if confirm_action("Are you sure you want to delete this task?"):
             deleted_task, error = manager.delete_task(task_id)
             if error:
                 print_error(f"Error: {error}")
             else:
                 print_success(f"Task #{deleted_task.id} '{deleted_task.title}' deleted successfully")
         else:
-            print("Deletion cancelled")
+            print_info("Deletion cancelled")
 
     except (EOFError, KeyboardInterrupt):
         raise  # Re-raise to main loop
@@ -204,8 +224,6 @@ def run() -> None:
         "5": delete_task_menu,
     }
 
-    print("\nWelcome to Todo Console App!")
-
     try:
         while True:
             main_menu()
@@ -214,7 +232,10 @@ def run() -> None:
                 choice = get_user_input("\nSelect option: ")
 
                 if choice == "6":
-                    print("\nApplication closed. Goodbye!")
+                    console.clear()
+                    print_banner()
+                    print_success("Thank you for using Todo App! Goodbye!")
+                    print_divider("magenta")
                     sys.exit(0)
 
                 action = menu_actions.get(choice)
@@ -223,17 +244,28 @@ def run() -> None:
                 else:
                     print_error("Invalid option, please try again")
 
+                # Add a small pause and prompt to continue
+                if choice in ["1", "2", "3", "4", "5"]:
+                    print_info("Press Enter to continue...")
+                    input()
+
             except (EOFError, KeyboardInterrupt):
                 raise  # Re-raise to outer handler
 
     except KeyboardInterrupt:
-        print("\n\nApplication closed")
+        console.clear()
+        print_banner()
+        print_info("Application closed by user")
+        print_divider("magenta")
         sys.exit(0)
     except EOFError:
-        print("\n\nInput terminated. Application closed")
+        console.clear()
+        print_banner()
+        print_info("Input terminated. Application closed")
+        print_divider("magenta")
         sys.exit(0)
     except Exception as e:
-        print(f"\nAn unexpected error occurred. Please restart the application.")
+        print_error(f"An unexpected error occurred: {e}")
         sys.exit(1)
 
 

@@ -1,50 +1,198 @@
-# Todo Console App - Phase I
+# Todo Application - Spec-Driven Development Evolution
 
-A command-line todo application that stores tasks in memory. This is Phase I of a five-phase evolution toward a cloud-native AI-powered todo system.
+A multi-phase todo application demonstrating spec-driven development with Claude Code. This project evolves from a simple console app (Phase I) to a cloud-native AI-powered system (Phase V).
 
-## Features
+## Current Phase: Phase II - Full-Stack Web Application ✅ Complete
 
-- ✅ **Create Tasks**: Add tasks with title (required) and optional description
-- ✅ **View Tasks**: See all tasks in a formatted table with status indicators (○ pending / ✓ completed)
-- ✅ **Mark Complete**: Toggle task completion status
-- ✅ **Update Tasks**: Modify task title and/or description
-- ✅ **Delete Tasks**: Remove tasks with confirmation prompt
+Multi-user web application with authentication, persistent storage, and RESTful API.
+
+## Phase Evolution
+
+### ✅ Phase I: Console Application (Complete)
+- In-memory task storage
+- Command-line interface
+- Single-user CRUD operations
+
+### ✅ Phase II: Web Application (Complete)
+- ✅ JWT-based authentication (signup, signin, logout)
+- ✅ Multi-user support with data isolation
+- ✅ PostgreSQL persistent storage
+- ✅ FastAPI RESTful backend
+- ✅ Next.js React frontend with Tailwind CSS
+- ✅ Full CRUD operations (Create, View, Update, Delete tasks)
+- ✅ Optimistic UI updates with React Query
+- ✅ Responsive design (mobile-first)
+- ✅ Inline task editing with keyboard shortcuts
+- ✅ Delete confirmation dialogs
+
+### 📋 Phase III: AI Integration (Planned)
+- Natural language task creation
+- AI chatbot interface
+- Intelligent task suggestions
+
+### 📋 Phase IV: Cloud-Native (Planned)
+- Kubernetes deployment
+- Event-driven architecture
+- Horizontal scaling
+
+### 📋 Phase V: Advanced Features (Planned)
+- Task priorities and tags
+- Due dates and reminders
+- Search and filtering
+- Team collaboration
 
 ## Requirements
 
-- **Python 3.13+** (currently running on Python 3.11.9)
-- **UV Package Manager** - [Installation Guide](https://github.com/astral-sh/uv)
-- **Terminal** with UTF-8 encoding support
-- **Operating System**: Windows (WSL 2), Linux, or Mac
+### Phase I (Console App)
+- Python 3.11+
+- UV Package Manager
 
-## Installation
+### Phase II (Web Application)
+- **Node.js**: 18.x or 20.x (LTS)
+- **Python**: 3.11+
+- **PostgreSQL**: 15+ (or Neon account)
+- **Git**: Latest version
 
-### 1. Clone the Repository
+## Quick Start - Phase II Web Application
+
+### 1. Clone and Checkout
 
 ```bash
 git clone <repository-url>
 cd Todoapp
+git checkout 002-phase-ii-fullstack-web
 ```
 
-### 2. Ensure You're on the Feature Branch
+### 2. Setup Backend
+
+```bash
+cd backend
+
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Configure environment
+cp .env.example .env
+# Edit .env and set DATABASE_URL and BETTER_AUTH_SECRET
+```
+
+### 3. Setup Frontend
+
+```bash
+cd ../frontend
+
+# Install dependencies
+npm install
+
+# Configure environment
+cp .env.local.example .env.local
+# Edit .env.local and set BETTER_AUTH_SECRET (must match backend)
+```
+
+### 4. Start Database (Local Development)
+
+```bash
+# From project root
+docker-compose up -d
+```
+
+Or use Neon PostgreSQL (recommended).
+
+### 5. Run Application
+
+**Option 1: One Command (Recommended) 🚀**
+
+Run both frontend and backend together:
+
+```bash
+# Using batch file (Windows)
+.\dev.bat
+
+# Or using PowerShell script
+.\dev.ps1
+
+# Or using npm (after installing dependencies)
+npm install  # Install concurrently
+npm run dev
+```
+
+This will start both servers in separate windows/terminals.
+
+**Option 2: Separate Terminals**
+
+**Terminal 1 - Backend**:
+```bash
+cd backend
+source venv/bin/activate  # Windows: venv\Scripts\activate
+uvicorn src.main:app --reload --port 8000
+```
+
+**Terminal 2 - Frontend**:
+```bash
+cd frontend
+npm run dev
+```
+
+**Access Application**: http://localhost:3000
+
+- Health Check: http://localhost:8000/health
+- API Docs: http://localhost:8000/docs
+
+## Phase II Features
+
+### User Stories Implemented
+
+1. **User Authentication (P1)**
+   - Sign up with email, name, password
+   - Sign in with credentials
+   - Logout functionality
+   - JWT tokens with 7-day expiration
+   - httpOnly cookie storage for security
+
+2. **Create and View Tasks (P2)**
+   - Create tasks with title and optional description
+   - View personal task list (newest first)
+   - Task count statistics (total, pending, completed)
+   - Empty state with helpful prompts
+   - Real-time optimistic UI updates
+
+3. **Mark Tasks Complete (P3)**
+   - Toggle checkbox to mark complete/pending
+   - Visual feedback (strikethrough, muted colors)
+   - Instant UI updates before server confirmation
+   - Smooth animations
+
+4. **Edit Task Details (P4)**
+   - Inline editing mode
+   - Update title and description
+   - Keyboard shortcuts (Enter to save, Escape to cancel)
+   - Character count indicators
+   - Validation with error messages
+
+5. **Delete Tasks (P5)**
+   - Delete button with confirmation dialog
+   - Shows task title in confirmation
+   - Optimistic removal from UI
+   - Rollback on failure
+
+### Technical Highlights
+
+- **Security**: User data isolation, JWT validation on every request, bcrypt password hashing
+- **Performance**: <100ms optimistic updates, <500ms API p95, indexed database queries
+- **UX**: Mobile-responsive, keyboard shortcuts, loading states, error messages
+- **Architecture**: Separation of concerns, TypeScript type safety, Pydantic validation
+
+## Phase I Console App (Legacy)
+
+### Running Phase I
 
 ```bash
 git checkout 001-todo-console-app
-```
-
-### 3. Install Dependencies
-
-UV will automatically create a virtual environment and install dependencies:
-
-```bash
 uv sync
-```
-
-## Usage
-
-### Running the Application
-
-```bash
 uv run python -m src.main
 ```
 
