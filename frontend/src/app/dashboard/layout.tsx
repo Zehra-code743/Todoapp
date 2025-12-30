@@ -1,15 +1,44 @@
 /**
  * Dashboard Layout
- * Includes header with logout button
+ * Includes header with logout button and auth protection
  */
 
 'use client';
 
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/Button';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const { user, signOut } = useAuth();
+  const router = useRouter();
+  const { user, isAuthenticated, isLoading, signOut } = useAuth();
+
+  // Redirect unauthenticated users to signin
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      router.replace('/signin');
+    }
+  }, [isAuthenticated, isLoading, router]);
+
+  // Show loading while checking auth
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent">
+            <span className="sr-only">Loading...</span>
+          </div>
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Don't render children if not authenticated (will redirect)
+  if (!isAuthenticated) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">

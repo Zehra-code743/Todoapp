@@ -42,15 +42,17 @@ export function TaskForm({ onSubmit, isLoading = false }: TaskFormProps) {
     }
 
     try {
+      console.log('Submitting task:', { title: title.trim(), description: description.trim() || undefined });
       await onSubmit({
         title: title.trim(),
         description: description.trim() || undefined,
       });
-
+      console.log('Task created successfully');
       // Clear form on success
       setTitle('');
       setDescription('');
     } catch (err) {
+      console.error('Task creation error:', err);
       setError(err instanceof Error ? err.message : 'Failed to create task');
     }
   };
