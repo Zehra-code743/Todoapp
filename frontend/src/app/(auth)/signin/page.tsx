@@ -43,28 +43,34 @@ export default function SignInPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 via-white to-blue-50">
+    <div className="min-h-screen bg-background relative overflow-hidden flex flex-col">
+      {/* Background Orbs */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/10 rounded-full blur-[120px] animate-blob" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-500/10 rounded-full blur-[120px] animate-blob animation-delay-4000" />
+      </div>
+
       {/* Header */}
-      <header className="border-b bg-white/60 backdrop-blur-md sticky top-0 z-50">
+      <header className="border-b border-border/40 bg-background/60 backdrop-blur-xl sticky top-0 z-50">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
-                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+          <div className="flex h-20 items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-modern-gradient rounded-xl flex items-center justify-center shadow-lg ring-1 ring-white/20">
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                 </svg>
               </div>
-              <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+              <Link href="/" className="text-2xl font-black gradient-text tracking-tighter transition-opacity hover:opacity-80">
                 TodoApp
               </Link>
             </div>
-            <div className="flex items-center gap-3">
-              <span className="text-gray-600 hidden sm:block">Don't have an account?</span>
+            <div className="flex items-center gap-6">
+              <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest hidden sm:block opacity-60">Identity Portal</span>
               <Link
                 href="/signup"
-                className="px-5 py-2 rounded-lg bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 font-medium shadow-lg shadow-blue-500/25 transition-all duration-300 hover:shadow-blue-500/40 hover:scale-105"
+                className="px-6 py-2.5 rounded-xl bg-modern-gradient text-white font-black text-xs uppercase tracking-widest shadow-xl shadow-primary/20 transition-all duration-300 hover:shadow-primary/40 hover:scale-105 active:scale-95"
               >
-                Sign Up
+                Enroll
               </Link>
             </div>
           </div>
@@ -72,128 +78,144 @@ export default function SignInPage() {
       </header>
 
       {/* Sign In Form */}
-      <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
-        <div className="w-full max-w-md">
-          <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold tracking-tight text-gray-900">
-                Welcome back
+      <div className="flex-1 flex items-center justify-center px-4 py-20 relative">
+        <div className="w-full max-w-[440px] animate-in fade-in zoom-in-95 duration-700">
+          <div className="glass-card rounded-[2.5rem] shadow-premium p-10 relative overflow-hidden">
+            {/* Visual accent */}
+            <div className="absolute top-0 left-0 w-full h-1.5 bg-modern-gradient opacity-80" />
+
+            <div className="text-center mb-10">
+              <div className="inline-flex p-3 bg-primary/10 rounded-2xl mb-4">
+                 <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+                 </svg>
+              </div>
+              <h2 className="text-4xl font-black tracking-tighter text-foreground">
+                Welcome <span className="gradient-text">Back</span>
               </h2>
-              <p className="mt-2 text-gray-600">
-                Sign in to access your tasks
+              <p className="mt-3 text-sm font-medium text-muted-foreground uppercase tracking-widest opacity-70">
+                Authorized access only
               </p>
             </div>
 
-            <form className="space-y-6" onSubmit={handleSubmit}>
+            <form className="space-y-8" onSubmit={handleSubmit}>
               {error && (
-                <div className="rounded-lg bg-red-50 p-4 border border-red-100">
-                  <p className="text-sm text-red-600">{error}</p>
+                <div className="rounded-2xl bg-destructive/10 p-4 border border-destructive/20 animate-in slide-in-from-top-2">
+                  <div className="flex items-center gap-3">
+                     <div className="w-2 h-2 bg-destructive rounded-full" />
+                     <p className="text-xs font-bold text-destructive uppercase tracking-tight">{error}</p>
+                  </div>
                 </div>
               )}
 
-              <div className="space-y-4">
+              <div className="space-y-5">
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                    Email address
+                  <label htmlFor="email" className="block text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-2 px-1">
+                    Neural Identifier (Email)
                   </label>
                   <input
                     id="email"
                     name="email"
                     type="email"
-                    autoComplete="email"
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="relative block w-full appearance-none rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 transition-all"
-                    placeholder="Enter your email"
+                    className="modern-input block w-full rounded-2xl px-5 py-4 text-foreground placeholder-muted-foreground/40 outline-none h-14 font-medium"
+                    placeholder="name@nexus.com"
                   />
                 </div>
                 <div>
-                  <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-                    Password
-                  </label>
+                  <div className="flex items-center justify-between mb-2 px-1">
+                    <label htmlFor="password" className="block text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">
+                      Access Key
+                    </label>
+                    <a href="#" className="text-[10px] font-black text-primary uppercase tracking-widest hover:opacity-80 transition-opacity">
+                      Lost Key?
+                    </a>
+                  </div>
                   <input
                     id="password"
                     name="password"
                     type="password"
-                    autoComplete="current-password"
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="relative block w-full appearance-none rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 transition-all"
-                    placeholder="Enter your password"
+                    className="modern-input block w-full rounded-2xl px-5 py-4 text-foreground placeholder-muted-foreground/40 outline-none h-14 font-medium"
+                    placeholder="••••••••"
                   />
                 </div>
               </div>
 
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
+              <div className="flex items-center">
+                <div className="flex items-center group cursor-pointer">
                   <input
                     id="remember"
                     name="remember"
                     type="checkbox"
-                    className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    className="h-5 w-5 rounded-lg border-border bg-background text-primary focus:ring-primary/20 transition-all cursor-pointer"
                   />
-                  <label htmlFor="remember" className="ml-2 block text-sm text-gray-700">
-                    Remember me
+                  <label htmlFor="remember" className="ml-3 block text-[10px] font-black text-muted-foreground uppercase tracking-widest cursor-pointer group-hover:text-foreground transition-colors">
+                    Maintain Session
                   </label>
                 </div>
-                <a href="#" className="text-sm font-medium text-blue-600 hover:text-blue-500">
-                  Forgot password?
-                </a>
               </div>
 
               <div>
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="group relative flex w-full justify-center items-center gap-2 rounded-lg bg-gradient-to-r from-blue-600 to-blue-700 px-4 py-3 text-sm font-semibold text-white hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25"
+                  className="group relative flex w-full justify-center items-center h-14 rounded-2xl bg-modern-gradient text-sm font-black text-white hover:scale-[1.02] active:scale-95 transition-all duration-300 shadow-xl shadow-primary/20 hover:shadow-primary/40 disabled:opacity-50 disabled:scale-100 uppercase tracking-[0.2em]"
                 >
                   {isLoading ? (
-                    <>
-                      <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-r-transparent"></div>
-                      Signing in...
-                    </>
+                    <div className="flex items-center gap-3">
+                      <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white"></div>
+                      <span className="opacity-80">Synchronizing...</span>
+                    </div>
                   ) : (
-                    <>
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                    <div className="flex items-center gap-3">
+                      <span>Initiate Access</span>
+                      <svg className="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
                       </svg>
-                      Sign in
-                    </>
+                    </div>
                   )}
                 </button>
               </div>
             </form>
 
-            <div className="mt-6 text-center">
-              <p className="text-sm text-gray-600">
-                Don't have an account?{' '}
-                <Link href="/signup" className="font-medium text-blue-600 hover:text-blue-500">
-                  Sign up for free
+            <div className="mt-10 pt-10 border-t border-border/40 text-center">
+              <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest opacity-60">
+                New to the system?{' '}
+                <Link href="/signup" className="text-primary hover:opacity-80 transition-opacity ml-1">
+                  Request Enrollment
                 </Link>
               </p>
             </div>
           </div>
 
           {/* Back to Home */}
-          <div className="mt-6 text-center">
-            <Link href="/" className="text-sm text-gray-500 hover:text-gray-700 flex items-center justify-center gap-1">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          <div className="mt-8 text-center animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500 fill-mode-both">
+            <Link href="/" className="inline-flex items-center gap-2 text-[10px] font-black text-muted-foreground uppercase tracking-widest hover:text-foreground transition-colors group">
+              <svg className="w-3 h-3 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M15 19l-7-7 7-7" />
               </svg>
-              Back to home
+              Return to Surface
             </Link>
           </div>
         </div>
       </div>
 
       {/* Footer */}
-      <footer className="border-t bg-white">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
-          <p className="text-center text-sm text-gray-500">
-            © 2025 TodoApp. Built with Next.js and FastAPI.
-          </p>
+      <footer className="mt-auto border-t border-border/20 bg-background/40 backdrop-blur-sm py-8">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest">
+              © 2026 TodoApp Core Runtime
+            </p>
+            <div className="flex gap-6">
+                <span className="text-[10px] font-black text-primary/60 uppercase tracking-widest">v2.1.0-STABLE</span>
+            </div>
+          </div>
         </div>
       </footer>
     </div>

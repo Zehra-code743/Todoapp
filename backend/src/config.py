@@ -21,6 +21,9 @@ class Settings(BaseSettings):
     # CORS
     cors_origins: str = "http://localhost:3000"
 
+    # AI Integration
+    openai_api_key: str | None = None
+
     # Server
     port: int = 8000
     env: str = "development"

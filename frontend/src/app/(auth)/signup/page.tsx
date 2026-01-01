@@ -55,26 +55,32 @@ export default function SignUpPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 via-white to-blue-50">
+    <div className="min-h-screen bg-background relative overflow-hidden flex flex-col">
+      {/* Background Orbs */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10">
+        <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-primary/10 rounded-full blur-[120px] animate-blob" />
+        <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-purple-500/10 rounded-full blur-[120px] animate-blob animation-delay-2000" />
+      </div>
+
       {/* Header */}
-      <header className="border-b bg-white/60 backdrop-blur-md sticky top-0 z-50">
+      <header className="border-b border-border/40 bg-background/60 backdrop-blur-xl sticky top-0 z-50">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
-                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+          <div className="flex h-20 items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-modern-gradient rounded-xl flex items-center justify-center shadow-lg ring-1 ring-white/20">
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                 </svg>
               </div>
-              <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+              <Link href="/" className="text-2xl font-black gradient-text tracking-tighter transition-opacity hover:opacity-80">
                 TodoApp
               </Link>
             </div>
-            <div className="flex items-center gap-3">
-              <span className="text-gray-600 hidden sm:block">Already have an account?</span>
+            <div className="flex items-center gap-6">
+              <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest hidden sm:block opacity-60">System Registry</span>
               <Link
                 href="/signin"
-                className="px-5 py-2 rounded-lg border-2 border-blue-600 text-blue-600 hover:bg-blue-50 font-medium transition-all duration-300 hover:scale-105"
+                className="px-6 py-2.5 rounded-xl border border-border/60 text-foreground/70 hover:text-primary hover:border-primary/30 font-black text-xs uppercase tracking-widest transition-all duration-300 shadow-sm"
               >
                 Sign In
               </Link>
@@ -84,97 +90,109 @@ export default function SignUpPage() {
       </header>
 
       {/* Sign Up Form */}
-      <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
-        <div className="w-full max-w-md">
-          <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold tracking-tight text-gray-900">
-                Create your account
+      <div className="flex-1 flex items-center justify-center px-4 py-20 relative">
+        <div className="w-full max-w-[460px] animate-in fade-in zoom-in-95 duration-700">
+          <div className="glass-card rounded-[2.5rem] shadow-premium p-10 relative overflow-hidden">
+             {/* Visual accent */}
+            <div className="absolute top-0 left-0 w-full h-1.5 bg-modern-gradient opacity-80" />
+
+            <div className="text-center mb-10">
+               <div className="inline-flex p-3 bg-primary/10 rounded-2xl mb-4">
+                 <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                 </svg>
+              </div>
+              <h2 className="text-4xl font-black tracking-tighter text-foreground">
+                Join the <span className="gradient-text">Network</span>
               </h2>
-              <p className="mt-2 text-gray-600">
-                Get started with TodoApp today
+              <p className="mt-3 text-sm font-medium text-muted-foreground uppercase tracking-widest opacity-70">
+                Register unique operator signature
               </p>
             </div>
 
             <form className="space-y-6" onSubmit={handleSubmit}>
               {error && (
-                <div className="rounded-lg bg-red-50 p-4 border border-red-100">
-                  <p className="text-sm text-red-600">{error}</p>
+                <div className="rounded-2xl bg-destructive/10 p-4 border border-destructive/20 animate-in slide-in-from-top-2">
+                  <div className="flex items-center gap-3">
+                     <div className="w-2 h-2 bg-destructive rounded-full" />
+                     <p className="text-xs font-bold text-destructive uppercase tracking-tight">{error}</p>
+                  </div>
                 </div>
               )}
 
-              <div className="space-y-4">
+              <div className="space-y-5">
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                    Email address
+                  <label htmlFor="email" className="block text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-2 px-1">
+                    Neural Identifier (Email)
                   </label>
                   <input
                     id="email"
                     name="email"
                     type="email"
-                    autoComplete="email"
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="relative block w-full appearance-none rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 transition-all"
-                    placeholder="Enter your email"
+                    className="modern-input block w-full rounded-2xl px-5 py-4 text-foreground placeholder-muted-foreground/40 outline-none h-14 font-medium"
+                    placeholder="name@nexus.com"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                    Full name
+                   <label htmlFor="name" className="block text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-2 px-1">
+                    Operator Designation (Name)
                   </label>
                   <input
                     id="name"
                     name="name"
                     type="text"
-                    autoComplete="name"
                     required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="relative block w-full appearance-none rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 transition-all"
-                    placeholder="Enter your name"
+                    className="modern-input block w-full rounded-2xl px-5 py-4 text-foreground placeholder-muted-foreground/40 outline-none h-14 font-medium"
+                    placeholder="Alpha One"
                   />
-                  <p className="mt-1 text-xs text-gray-500">
-                    {USER_NAME_MIN_LENGTH}-{USER_NAME_MAX_LENGTH} characters
-                  </p>
+                  <div className="mt-2 flex justify-end px-1">
+                     <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest opacity-50">
+                        REQ: {USER_NAME_MIN_LENGTH}-{USER_NAME_MAX_LENGTH} CHARS
+                     </span>
+                  </div>
                 </div>
 
                 <div>
-                  <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-                    Password
+                  <label htmlFor="password" className="block text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em] mb-2 px-1">
+                    Access Key (Password)
                   </label>
                   <input
                     id="password"
                     name="password"
                     type="password"
-                    autoComplete="new-password"
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="relative block w-full appearance-none rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 transition-all"
-                    placeholder="Create a password"
+                    className="modern-input block w-full rounded-2xl px-5 py-4 text-foreground placeholder-muted-foreground/40 outline-none h-14 font-medium"
+                    placeholder="••••••••"
                   />
-                  <p className="mt-1 text-xs text-gray-500">
-                    Minimum {PASSWORD_MIN_LENGTH} characters
-                  </p>
+                   <div className="mt-2 flex justify-end px-1">
+                     <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest opacity-50">
+                        STR_MIN: {PASSWORD_MIN_LENGTH} CHARS
+                     </span>
+                  </div>
                 </div>
               </div>
 
-              <div className="flex items-start">
+              <div className="flex items-start group cursor-pointer py-2">
                 <input
                   id="terms"
                   name="terms"
                   type="checkbox"
                   required
-                  className="h-4 w-4 mt-0.5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  className="h-5 w-5 mt-1 rounded-lg border-border bg-background text-primary focus:ring-primary/20 transition-all cursor-pointer"
                 />
-                <label htmlFor="terms" className="ml-2 block text-sm text-gray-600">
-                  I agree to the{' '}
-                  <a href="#" className="font-medium text-blue-600 hover:text-blue-500">Terms of Service</a>
+                <label htmlFor="terms" className="ml-3 block text-[10px] font-black text-muted-foreground uppercase tracking-widest cursor-pointer group-hover:text-foreground transition-colors leading-relaxed">
+                  I accept the{' '}
+                  <a href="#" className="text-primary hover:opacity-80 transition-opacity">Neural Protocols</a>
                   {' '}and{' '}
-                  <a href="#" className="font-medium text-blue-600 hover:text-blue-500">Privacy Policy</a>
+                  <a href="#" className="text-primary hover:opacity-80 transition-opacity">Data Ethics</a>
                 </label>
               </div>
 
@@ -182,53 +200,58 @@ export default function SignUpPage() {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="group relative flex w-full justify-center items-center gap-2 rounded-lg bg-gradient-to-r from-blue-600 to-blue-700 px-4 py-3 text-sm font-semibold text-white hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25"
+                  className="group relative flex w-full justify-center items-center h-14 rounded-2xl bg-modern-gradient text-sm font-black text-white hover:scale-[1.02] active:scale-95 transition-all duration-300 shadow-xl shadow-primary/20 hover:shadow-primary/40 disabled:opacity-50 disabled:scale-100 uppercase tracking-[0.2em]"
                 >
                   {isLoading ? (
-                    <>
-                      <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-r-transparent"></div>
-                      Creating account...
-                    </>
+                    <div className="flex items-center gap-3">
+                      <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white"></div>
+                      <span className="opacity-80">Initializing...</span>
+                    </div>
                   ) : (
-                    <>
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                    <div className="flex items-center gap-3">
+                      <span>Register Identity</span>
+                      <svg className="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
                       </svg>
-                      Create account
-                    </>
+                    </div>
                   )}
                 </button>
               </div>
             </form>
 
-            <div className="mt-6 text-center">
-              <p className="text-sm text-gray-600">
-                Already have an account?{' '}
-                <Link href="/signin" className="font-medium text-blue-600 hover:text-blue-500">
-                  Sign in
+            <div className="mt-10 pt-10 border-t border-border/40 text-center">
+              <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest opacity-60">
+                Already registered?{' '}
+                <Link href="/signin" className="text-primary hover:opacity-80 transition-opacity ml-1">
+                  Access Portal
                 </Link>
               </p>
             </div>
           </div>
 
           {/* Back to Home */}
-          <div className="mt-6 text-center">
-            <Link href="/" className="text-sm text-gray-500 hover:text-gray-700 flex items-center justify-center gap-1">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          <div className="mt-8 text-center animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500 fill-mode-both">
+            <Link href="/" className="inline-flex items-center gap-2 text-[10px] font-black text-muted-foreground uppercase tracking-widest hover:text-foreground transition-colors group">
+              <svg className="w-3 h-3 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M15 19l-7-7 7-7" />
               </svg>
-              Back to home
+              Return to Surface
             </Link>
           </div>
         </div>
       </div>
 
       {/* Footer */}
-      <footer className="border-t bg-white">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
-          <p className="text-center text-sm text-gray-500">
-            © 2025 TodoApp. Built with Next.js and FastAPI.
-          </p>
+      <footer className="mt-auto border-t border-border/20 bg-background/40 backdrop-blur-sm py-8">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest">
+              © 2026 TodoApp Core Runtime
+            </p>
+            <div className="flex gap-6">
+                <span className="text-[10px] font-black text-primary/60 uppercase tracking-widest">v2.1.0-STABLE</span>
+            </div>
+          </div>
         </div>
       </footer>
     </div>

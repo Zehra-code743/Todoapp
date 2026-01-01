@@ -61,45 +61,47 @@ export default function HomePage() {
 
   // Show landing page for unauthenticated users
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 via-white to-blue-50">
-      {/* Animated background blobs */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-2000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-green-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-4000"></div>
+    <div className="min-h-screen bg-background relative overflow-hidden flex flex-col">
+      {/* Background Orbs */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10">
+        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/10 rounded-full blur-[120px] animate-blob" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-500/10 rounded-full blur-[120px] animate-blob animation-delay-2000" />
+        <div className="absolute top-[30%] right-[10%] w-[30%] h-[30%] bg-blue-400/10 rounded-full blur-[80px] animate-blob animation-delay-4000" />
       </div>
 
       {/* Header */}
-      <header className="relative border-b bg-white/60 backdrop-blur-md sticky top-0 z-50">
+      <header className="relative border-b border-border/40 bg-background/60 backdrop-blur-xl sticky top-0 z-50 transition-all duration-300">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
-                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+          <div className="flex h-20 items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="w-11 h-11 bg-modern-gradient rounded-2xl flex items-center justify-center shadow-lg ring-1 ring-white/20">
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                 </svg>
               </div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+              <h1 className="text-2xl font-black gradient-text tracking-tighter">
                 TodoApp
               </h1>
             </div>
-            <nav className="hidden md:flex items-center gap-6">
-              <a href="#features" className="text-gray-600 hover:text-blue-600 transition-colors font-medium">Features</a>
-              <a href="#how-it-works" className="text-gray-600 hover:text-blue-600 transition-colors font-medium">How it Works</a>
-              <a href="#testimonials" className="text-gray-600 hover:text-blue-600 transition-colors font-medium">Testimonials</a>
+            <nav className="hidden lg:flex items-center gap-8">
+              {['Features', 'Intelligence', 'Network'].map((item) => (
+                <a key={item} href={`#${item.toLowerCase()}`} className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors">
+                  {item}
+                </a>
+              ))}
             </nav>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-4">
               <Link
                 href="/signin"
-                className="px-4 py-2 text-gray-700 hover:text-gray-900 font-medium transition-colors"
+                className="px-5 py-2.5 text-xs font-black uppercase tracking-widest text-foreground/70 hover:text-primary transition-colors"
               >
-                Sign In
+                Access
               </Link>
               <Link
                 href="/signup"
-                className="px-5 py-2 rounded-lg bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 font-medium shadow-lg shadow-blue-500/25 transition-all duration-300 hover:shadow-blue-500/40 hover:scale-105"
+                className="px-6 py-2.5 rounded-xl bg-modern-gradient text-white font-black text-xs uppercase tracking-widest shadow-xl shadow-primary/20 transition-all duration-300 hover:shadow-primary/40 hover:scale-105 active:scale-95 ring-1 ring-white/20"
               >
-                Sign Up
+                Enroll
               </Link>
             </div>
           </div>
@@ -107,85 +109,102 @@ export default function HomePage() {
       </header>
 
       {/* Hero Section */}
-      <main className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
-        <div className="text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-100 text-blue-700 text-sm font-medium mb-6 animate-fade-in">
-            <span className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></span>
-            Now with dark mode support
+      <main className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-20 pb-32">
+        <div className="text-center relative">
+          <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full glass-card border-primary/20 text-primary text-[10px] font-black uppercase tracking-[0.15em] mb-10 animate-fade-in shadow-lg">
+            <span className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse"></span>
+            Neural Core v2.1 Activated
           </div>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 animate-slide-up">
-            Organize Your Life with <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">TodoApp</span>
+          <h1 className="text-5xl sm:text-7xl lg:text-8xl font-black text-foreground mb-8 tracking-tight animate-slide-up drop-shadow-sm">
+            Automate Your <br />
+            <span className="gradient-text italic">Workflow.</span>
           </h1>
-          <p className="text-lg sm:text-xl text-gray-600 mb-10 max-w-2xl mx-auto animate-slide-up animation-delay-200">
-            A simple, powerful todo application to help you stay organized and productive.
-            Create, manage, and track your tasks with ease.
+          <p className="text-lg sm:text-xl text-muted-foreground mb-12 max-w-2xl mx-auto animate-slide-up animation-delay-200 font-medium leading-relaxed">
+            A high-performance neural workspace designed to synchronize your goals and orchestrate your productivity with AI intelligence.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-slide-up animation-delay-400">
+          <div className="flex flex-col sm:flex-row gap-5 justify-center animate-slide-up animation-delay-400">
             <Link
               href="/signup"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 font-semibold text-lg shadow-lg shadow-blue-500/25 transition-all duration-300 hover:shadow-blue-500/40 hover:scale-105"
+              className="inline-flex items-center justify-center gap-3 px-10 py-5 rounded-2xl bg-modern-gradient text-white font-black text-sm uppercase tracking-widest shadow-2xl shadow-primary/30 transition-all duration-300 hover:shadow-primary/50 hover:scale-[1.02] active:scale-95 ring-1 ring-white/20"
             >
-              Get Started Free
+              Initiate Sequence
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>
             </Link>
             <Link
               href="/signin"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl border-2 border-blue-600 text-blue-600 hover:bg-blue-50 font-semibold text-lg transition-all duration-300 hover:scale-105"
+              className="inline-flex items-center justify-center gap-3 px-10 py-5 rounded-2xl glass-card border-border/60 text-foreground font-black text-sm uppercase tracking-widest transition-all duration-300 hover:scale-[1.02] active:scale-95 shadow-xl"
             >
-              Sign In
+              Neural Access
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
               </svg>
             </Link>
           </div>
         </div>
 
         {/* Interactive Demo Section */}
-        <div className="mt-16 max-w-lg mx-auto animate-fade-in animation-delay-600">
-          <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-            <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4">
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-red-400"></div>
-                <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
-                <div className="w-3 h-3 rounded-full bg-green-400"></div>
-                <span className="ml-2 text-white font-medium text-sm">Interactive Demo</span>
+        <div className="mt-28 relative max-w-2xl mx-auto animate-fade-in animation-delay-600">
+           <div className="absolute -inset-4 bg-modern-gradient rounded-[3rem] blur-2xl opacity-5" />
+          <div className="glass-card rounded-[2.5rem] shadow-premium overflow-hidden border-primary/10 relative">
+            <div className="bg-muted/30 px-8 py-5 border-b border-border/40">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-2.5 h-2.5 rounded-full bg-destructive/60"></div>
+                  <div className="w-2.5 h-2.5 rounded-full bg-amber-500/60"></div>
+                  <div className="w-2.5 h-2.5 rounded-full bg-green-500/60"></div>
+                </div>
+                <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest opacity-60">Terminal Interface</span>
               </div>
             </div>
-            <div className="p-6">
-              <p className="text-sm text-gray-500 mb-4">Try it right here - click the checkboxes!</p>
-              <div className="space-y-3">
+            <div className="p-10">
+              <div className="space-y-4">
                 {demoTasks.map(task => (
                   <div
                     key={task.id}
-                    className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
+                    className={cn(
+                      "flex items-center gap-4 p-5 rounded-2xl border transition-all duration-300 cursor-pointer group",
+                      task.completed
+                        ? "bg-primary/5 border-primary/20"
+                        : "bg-background/50 border-border/50 hover:border-primary/30 hover:shadow-lg"
+                    )}
                     onClick={() => toggleDemoTask(task.id)}
                   >
-                    <div className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all duration-200 ${
+                    <div className={cn(
+                      "w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all duration-500",
                       task.completed
-                        ? 'bg-green-500 border-green-500'
-                        : 'border-gray-300 hover:border-blue-400'
-                    }`}>
+                        ? 'bg-primary border-primary shadow-lg shadow-primary/40'
+                        : 'border-border/60 group-hover:border-primary/50'
+                    )}>
                       {task.completed && (
-                        <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                         </svg>
                       )}
                     </div>
-                    <span className={`flex-1 text-gray-700 ${task.completed ? 'line-through text-gray-400' : ''}`}>
+                    <span className={cn(
+                      "flex-1 font-bold text-base tracking-tight transition-all duration-300",
+                      task.completed ? 'text-muted-foreground/50 italic scale-95 origin-left' : 'text-foreground'
+                    )}>
                       {task.text}
                     </span>
+                    {task.completed && (
+                      <span className="text-[9px] font-black uppercase text-primary tracking-widest animate-fade-in">Verified</span>
+                    )}
                   </div>
                 ))}
               </div>
-              <div className="mt-4 pt-4 border-t border-gray-100">
-                <p className="text-sm text-gray-500">
-                  {demoTasks.filter(t => t.completed).length} of {demoTasks.length} tasks completed
-                </p>
-                <div className="h-2 bg-gray-100 rounded-full mt-2 overflow-hidden">
+              <div className="mt-10 pt-8 border-t border-border/40">
+                <div className="flex items-center justify-between mb-4">
+                   <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Synchronization Status</p>
+                   <p className="text-[10px] font-mono font-bold bg-primary/10 text-primary px-2 py-0.5 rounded">
+                    {Math.round((demoTasks.filter(t => t.completed).length / demoTasks.length) * 100)}%
+                   </p>
+                </div>
+                <div className="h-3 bg-muted rounded-full p-0.5 overflow-hidden">
                   <div
-                    className="h-full bg-gradient-to-r from-green-400 to-green-500 rounded-full transition-all duration-500"
+                    className="h-full bg-modern-gradient rounded-full shadow-[0_0_10px_rgba(59,130,246,0.3)] transition-all duration-1000 ease-in-out"
                     style={{ width: `${(demoTasks.filter(t => t.completed).length / demoTasks.length) * 100}%` }}
                   ></div>
                 </div>

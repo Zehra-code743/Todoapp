@@ -2,7 +2,14 @@
   "permissions": {
     "allow": [
       "Bash(powershell -ExecutionPolicy Bypass -Command \"if \\(Test-Path ''.specify/scripts/bash/create-phr.sh''\\) { bash .specify/scripts/bash/create-phr.sh --title ''Phase II Implementation Complete'' --stage ''green'' --feature ''002-phase-ii-fullstack-web'' --json } else { echo ''PHR script not found'' }\")",
-      "Bash(taskkill:*)"
+      "Bash(taskkill:*)",
+      "Bash(mkdir -p \"D:\\\\Todoapp\\\\specs\\\\003-phase-iii-ai-chatbot\\\\contracts\")",
+      "Bash(powershell -ExecutionPolicy Bypass -Command \".specify/scripts/powershell/update-agent-context.ps1 -AgentType claude\")",
+      "Bash(ls:*)",
+      "Skill(sp.adr)",
+      "Bash(powershell -ExecutionPolicy Bypass -Command \".specify/scripts/powershell/check-prerequisites.ps1 -Json\")",
+      "Bash(powershell -ExecutionPolicy Bypass -Command \".specify/scripts/powershell/check-prerequisites.ps1 -Json -RequireTasks -IncludeTasks\")",
+      "Bash(python:*)"
     ]
   }
 }

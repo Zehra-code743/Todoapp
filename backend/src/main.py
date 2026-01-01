@@ -21,6 +21,7 @@ async def lifespan(app: FastAPI):
 
     # Import models to ensure they're registered with SQLModel metadata
     from src.models import User, Task
+    from models.conversation import Conversation, Message
 
     # Startup: Create all tables
     SQLModel.metadata.create_all(engine)
@@ -82,8 +83,9 @@ async def root():
 
 
 # Import and include routers
-from src.api.v1 import health, tasks, auth
+from src.api.v1 import health, tasks, auth, chat
 
 app.include_router(health.router, tags=["Health"])
 app.include_router(auth.router, prefix="/api", tags=["Authentication"])
 app.include_router(tasks.router, prefix="/api", tags=["Tasks"])
+app.include_router(chat.router, prefix="/api", tags=["Chat"])

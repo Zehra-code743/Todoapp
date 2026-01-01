@@ -8,6 +8,11 @@ from src.config import settings
 # Import models BEFORE creating engine to register them with SQLModel metadata
 from src.models.user import User
 from src.models.task import Task
+try:
+    from models.conversation import Conversation, Message
+except ImportError:
+    # If using relative path from src
+    from src.models.conversation import Conversation, Message
 
 # Create database engine
 engine = create_engine(

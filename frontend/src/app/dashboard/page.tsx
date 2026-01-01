@@ -17,6 +17,7 @@ import {
 import { TaskForm } from '@/components/TaskForm';
 import { TaskList } from '@/components/TaskList';
 import { DeleteConfirmDialog } from '@/components/DeleteConfirmDialog';
+import { PlusCircle } from 'lucide-react';
 
 export default function DashboardPage() {
   const { user, isLoading: authLoading } = useAuth();
@@ -84,148 +85,169 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 pb-2">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-          <p className="text-gray-600">Manage your tasks and stay productive</p>
+          <h1 className="text-4xl font-black tracking-tighter text-foreground drop-shadow-sm">
+            Control <span className="gradient-text">Center</span>
+          </h1>
+          <p className="text-muted-foreground font-medium mt-1">Operational overview of your active task sequences.</p>
         </div>
-        <div className="text-sm text-gray-500">
-          {tasks.length > 0 ? (
-            <span className="inline-flex items-center gap-1">
-              <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-              {completionRate}% completed
+        <div className="flex items-center space-x-4">
+          <div className="flex flex-col items-end">
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground opacity-70">Efficiency</span>
+            <span className="text-sm font-bold tabular-nums">
+              {tasks.length > 0 ? (
+                <span className="inline-flex items-center gap-2 text-primary">
+                  <span className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse"></span>
+                  {completionRate}% Nominal
+                </span>
+              ) : (
+                'System Idle'
+              )}
             </span>
-          ) : (
-            'Start adding tasks!'
-          )}
+          </div>
         </div>
       </div>
 
       {/* Task Statistics Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {/* Total Tasks */}
-        <div className="bg-white rounded-xl border border-gray-100 p-5 shadow-sm hover:shadow-md transition-shadow duration-200">
-          <div className="flex items-center justify-between">
-            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/25">
-              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+        <div className="glass-card rounded-[2rem] p-6 group hover:translate-y-[-4px] transition-all duration-300">
+          <div className="flex items-start justify-between">
+            <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors duration-500 shadow-inner">
+              <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
               </svg>
             </div>
-            <span className="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded-full">Total</span>
+            <div className="text-[10px] font-black tracking-widest uppercase py-1 px-2.5 bg-muted rounded-full opacity-60">Total</div>
           </div>
-          <div className="mt-4">
-            <p className="text-3xl font-bold text-gray-900">{tasks.length}</p>
-            <p className="text-sm text-gray-600 mt-1">Total Tasks</p>
+          <div className="mt-6">
+            <div className="text-4xl font-black tracking-tighter tabular-nums">{tasks.length}</div>
+            <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mt-1 opacity-70">Indexed Tasks</p>
           </div>
         </div>
 
         {/* Pending Tasks */}
-        <div className="bg-white rounded-xl border border-gray-100 p-5 shadow-sm hover:shadow-md transition-shadow duration-200">
-          <div className="flex items-center justify-between">
-            <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl flex items-center justify-center shadow-lg shadow-amber-500/25">
-              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        <div className="glass-card rounded-[2rem] p-6 group hover:translate-y-[-4px] transition-all duration-300 border-l-amber-500/20">
+          <div className="flex items-start justify-between">
+            <div className="w-14 h-14 bg-amber-500/10 text-amber-600 rounded-2xl flex items-center justify-center group-hover:bg-amber-500 group-hover:text-white transition-colors duration-500 shadow-inner">
+              <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
-            <span className="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded-full">Active</span>
+            <div className="text-[10px] font-black tracking-widest uppercase py-1 px-2.5 bg-amber-500/10 text-amber-600 rounded-full">Active</div>
           </div>
-          <div className="mt-4">
-            <p className="text-3xl font-bold text-amber-600">{pendingCount}</p>
-            <p className="text-sm text-gray-600 mt-1">Pending Tasks</p>
+          <div className="mt-6">
+            <div className="text-4xl font-black tracking-tighter tabular-nums text-amber-600">{pendingCount}</div>
+            <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mt-1 opacity-70">Processing</p>
           </div>
         </div>
 
         {/* Completed Tasks */}
-        <div className="bg-white rounded-xl border border-gray-100 p-5 shadow-sm hover:shadow-md transition-shadow duration-200">
-          <div className="flex items-center justify-between">
-            <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-lg shadow-green-500/25">
-              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        <div className="glass-card rounded-[2rem] p-6 group hover:translate-y-[-4px] transition-all duration-300 border-l-green-500/20">
+          <div className="flex items-start justify-between">
+            <div className="w-14 h-14 bg-green-500/10 text-green-600 rounded-2xl flex items-center justify-center group-hover:bg-green-500 group-hover:text-white transition-colors duration-500 shadow-inner">
+              <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
-            <span className="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded-full">Done</span>
+            <div className="text-[10px] font-black tracking-widest uppercase py-1 px-2.5 bg-green-500/10 text-green-600 rounded-full">Resolved</div>
           </div>
-          <div className="mt-4">
-            <p className="text-3xl font-bold text-green-600">{completedCount}</p>
-            <p className="text-sm text-gray-600 mt-1">Completed Tasks</p>
+          <div className="mt-6">
+            <div className="text-4xl font-black tracking-tighter tabular-nums text-green-600">{completedCount}</div>
+            <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mt-1 opacity-70">Verified</p>
           </div>
         </div>
 
         {/* Progress */}
-        <div className="bg-white rounded-xl border border-gray-100 p-5 shadow-sm hover:shadow-md transition-shadow duration-200">
-          <div className="flex items-center justify-between">
-            <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-violet-500 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/25">
-              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+        <div className="glass-card rounded-[2rem] p-6 group hover:translate-y-[-4px] transition-all duration-300 border-l-indigo-500/20">
+          <div className="flex items-start justify-between">
+            <div className="w-14 h-14 bg-indigo-500/10 text-indigo-600 rounded-2xl flex items-center justify-center group-hover:bg-modern-gradient group-hover:text-white transition-all duration-500 shadow-inner ring-1 ring-primary/10">
+              <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
               </svg>
             </div>
-            <span className="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded-full">Rate</span>
+            <div className="text-[10px] font-black tracking-widest uppercase py-1 px-2.5 bg-indigo-500/10 text-indigo-600 rounded-full">Velocity</div>
           </div>
-          <div className="mt-4">
-            <p className="text-3xl font-bold text-purple-600">{completionRate}%</p>
-            <p className="text-sm text-gray-600 mt-1">Completion Rate</p>
+          <div className="mt-6">
+            <div className="text-4xl font-black tracking-tighter tabular-nums gradient-text">{completionRate}%</div>
+            <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mt-1 opacity-70">Network Load</p>
           </div>
         </div>
       </div>
 
       {/* Progress Bar */}
       {tasks.length > 0 && (
-        <div className="bg-white rounded-xl border border-gray-100 p-4 shadow-sm">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium text-gray-700">Overall Progress</span>
-            <span className="text-sm text-gray-500">{completedCount} of {tasks.length} tasks</span>
+        <div className="glass-card rounded-2xl p-6 relative overflow-hidden group">
+          <div className="absolute top-0 left-0 w-2 h-full bg-primary/20" />
+          <div className="flex items-center justify-between mb-4 px-2">
+            <span className="text-sm font-black uppercase tracking-widest text-foreground opacity-80">Global Synchronization</span>
+            <span className="text-xs font-mono font-bold bg-muted px-2 py-1 rounded text-muted-foreground">{completedCount} / {tasks.length} SIGS</span>
           </div>
-          <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
+          <div className="h-4 bg-muted rounded-full p-1 overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-blue-500 via-green-500 to-emerald-500 rounded-full transition-all duration-500 ease-out"
+              className="h-full bg-modern-gradient rounded-full shadow-[0_0_15px_rgba(59,130,246,0.4)] transition-all duration-1000 ease-out"
               style={{ width: `${completionRate}%` }}
             />
           </div>
         </div>
       )}
 
-      {/* Create Task Form */}
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
-        <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
-              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-              </svg>
-            </div>
-            <h2 className="text-lg font-semibold text-white">Create New Task</h2>
-          </div>
-        </div>
-        <div className="p-6">
-          <TaskForm onSubmit={handleCreateTask} isLoading={createMutation.isPending} />
-        </div>
-      </div>
-
-      {/* Task List */}
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
-        <div className="bg-gradient-to-r from-gray-50 to-white px-6 py-4 border-b border-gray-100">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-gradient-to-br from-gray-500 to-gray-600 rounded-lg flex items-center justify-center shadow-sm">
-                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                </svg>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-4">
+        {/* Create Task Form */}
+        <div className="lg:col-span-5">
+           <div className="glass-card rounded-[2.5rem] overflow-hidden shadow-premium h-full">
+            <div className="px-8 py-6 border-b border-border/40 relative">
+              <div className="absolute top-0 right-0 p-4 opacity-5">
+                 <PlusCircle className="w-20 h-20" />
               </div>
-              <h2 className="text-lg font-semibold text-gray-900">Your Tasks</h2>
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-modern-gradient rounded-2xl flex items-center justify-center shadow-lg shadow-primary/20">
+                  <PlusCircle className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-black tracking-tight text-foreground uppercase">New Protocol</h2>
+                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest opacity-60">Register new active task</p>
+                </div>
+              </div>
             </div>
-            <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
-              {tasks.length} {tasks.length === 1 ? 'task' : 'tasks'}
-            </span>
+            <div className="p-8">
+              <TaskForm onSubmit={handleCreateTask} isLoading={createMutation.isPending} />
+            </div>
           </div>
         </div>
-        <div className="p-4">
-          <TaskList
-            tasks={tasks}
-            onToggle={handleToggleTask}
-            onUpdate={handleUpdateTask}
-            onDelete={handleDeleteTask}
-            isLoading={tasksLoading}
-          />
+
+        {/* Task List */}
+        <div className="lg:col-span-7">
+          <div className="glass-card rounded-[2.5rem] overflow-hidden shadow-premium h-full">
+            <div className="px-8 py-6 border-b border-border/40 bg-muted/20">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-background border border-border/60 rounded-2xl flex items-center justify-center shadow-sm">
+                    <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 6h16M4 12h16M4 18h7" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-black tracking-tight text-foreground uppercase">Active Tasks</h2>
+                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest opacity-60">Database query synchronized</p>
+                  </div>
+                </div>
+                <div className="px-4 py-1.5 bg-background border border-border/60 rounded-full font-mono text-[10px] font-bold shadow-sm">
+                   COUNT: {tasks.length}
+                </div>
+              </div>
+            </div>
+            <div className="p-4 lg:p-6 min-h-[400px]">
+              <TaskList
+                tasks={tasks}
+                onToggle={handleToggleTask}
+                onUpdate={handleUpdateTask}
+                onDelete={handleDeleteTask}
+                isLoading={tasksLoading}
+              />
+            </div>
+          </div>
         </div>
       </div>
 
