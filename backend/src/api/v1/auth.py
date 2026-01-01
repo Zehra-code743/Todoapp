@@ -4,7 +4,7 @@ Handles user signup, signin, and signout
 """
 
 from fastapi import APIRouter, HTTPException, status, Depends, Response
-from sqlmodel import Session
+from sqlmodel import Session, select
 
 from src.db import get_session
 from src.schemas.auth_schemas import (
@@ -20,6 +20,8 @@ from src.services.auth_service import (
     UserAlreadyExistsError,
     AuthenticationError,
 )
+from src.api.deps import get_current_user
+from src.models import User
 
 router = APIRouter()
 
@@ -112,3 +114,47 @@ async def signout():
     For production, consider using token blacklist or refresh tokens.
     """
     return SignOutResponse(message="Signed out successfully")
+
+
+@router.get("/auth/me")
+async def get_current_user_info(
+    current_user_id: str = Depends(get_current_user),
+    session: Session = Depends(get_session)
+):
+    """
+    Get current authenticated user information
+
+    Returns the user profile for the authenticated user based on JWT token.
+    Used by the frontend to verify authentication and get user details.
+
+    Returns:
+        User object with id, email, and name
+
+    Raises:
+        401: If JWT token is invalid or missing
+        404: If user not found in database
+    """
+    try:
+        # Query user from database
+        statement = select(User).where(User.id == current_user_id)
+        user = session.exec(statement).first()
+
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="User not found"
+            )
+
+        return {
+            "id": user.id,
+            "email": user.email,
+            "name": user.name
+        }
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to get user info: {str(e)}"
+        )

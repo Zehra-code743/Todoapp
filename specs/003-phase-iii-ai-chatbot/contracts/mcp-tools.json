@@ -1,0 +1,290 @@
+{
+  "schema_version": "1.0",
+  "mcp_server": {
+    "name": "todo-mcp-server",
+    "version": "1.0.0",
+    "description": "MCP server exposing task management operations for AI agent",
+    "transport": "stdio",
+    "port": 3001
+  },
+  "tools": [
+    {
+      "name": "add_task",
+      "description": "Create a new task for the user",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "description": "ID of the user creating the task (must match authenticated user)",
+            "pattern": "^usr_[a-zA-Z0-9]+$"
+          },
+          "title": {
+            "type": "string",
+            "description": "Task title (1-200 characters)",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "description": {
+            "type": "string",
+            "description": "Optional task description (max 1000 characters)",
+            "maxLength": 1000,
+            "nullable": true
+          }
+        },
+        "required": ["user_id", "title"]
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "task_id": {
+            "type": "integer",
+            "description": "ID of created task"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["created"],
+            "description": "Operation status"
+          },
+          "title": {
+            "type": "string",
+            "description": "Task title (echoed for confirmation)"
+          }
+        },
+        "required": ["task_id", "status", "title"]
+      },
+      "errors": [
+        {
+          "code": "VALIDATION_ERROR",
+          "message": "Title must be 1-200 characters"
+        },
+        {
+          "code": "VALIDATION_ERROR",
+          "message": "Description exceeds 1000 characters"
+        },
+        {
+          "code": "AUTHORIZATION_ERROR",
+          "message": "user_id does not match authenticated user"
+        }
+      ]
+    },
+    {
+      "name": "list_tasks",
+      "description": "Retrieve tasks for the user with optional status filter",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "description": "ID of the user (must match authenticated user)"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["all", "pending", "completed"],
+            "default": "all",
+            "description": "Filter tasks by completion status"
+          }
+        },
+        "required": ["user_id"]
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "tasks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string",
+                  "nullable": true
+                },
+                "completed": {
+                  "type": "boolean"
+                },
+                "created_at": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            }
+          },
+          "count": {
+            "type": "integer",
+            "description": "Number of tasks returned"
+          }
+        },
+        "required": ["tasks", "count"]
+      },
+      "errors": [
+        {
+          "code": "AUTHORIZATION_ERROR",
+          "message": "user_id does not match authenticated user"
+        }
+      ]
+    },
+    {
+      "name": "complete_task",
+      "description": "Mark a task as complete",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "description": "ID of the user (must match authenticated user)"
+          },
+          "task_id": {
+            "type": "integer",
+            "description": "ID of the task to complete"
+          }
+        },
+        "required": ["user_id", "task_id"]
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "task_id": {
+            "type": "integer"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["completed"]
+          },
+          "title": {
+            "type": "string",
+            "description": "Task title (for confirmation)"
+          }
+        },
+        "required": ["task_id", "status", "title"]
+      },
+      "errors": [
+        {
+          "code": "NOT_FOUND",
+          "message": "Task {task_id} not found"
+        },
+        {
+          "code": "AUTHORIZATION_ERROR",
+          "message": "Task does not belong to user"
+        }
+      ]
+    },
+    {
+      "name": "delete_task",
+      "description": "Delete a task permanently",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "description": "ID of the user (must match authenticated user)"
+          },
+          "task_id": {
+            "type": "integer",
+            "description": "ID of the task to delete"
+          }
+        },
+        "required": ["user_id", "task_id"]
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "task_id": {
+            "type": "integer"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["deleted"]
+          },
+          "title": {
+            "type": "string",
+            "description": "Task title (for confirmation)"
+          }
+        },
+        "required": ["task_id", "status", "title"]
+      },
+      "errors": [
+        {
+          "code": "NOT_FOUND",
+          "message": "Task {task_id} not found"
+        },
+        {
+          "code": "AUTHORIZATION_ERROR",
+          "message": "Task does not belong to user"
+        }
+      ]
+    },
+    {
+      "name": "update_task",
+      "description": "Update task title or description",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "description": "ID of the user (must match authenticated user)"
+          },
+          "task_id": {
+            "type": "integer",
+            "description": "ID of the task to update"
+          },
+          "title": {
+            "type": "string",
+            "description": "New task title (optional, 1-200 chars if provided)",
+            "minLength": 1,
+            "maxLength": 200,
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "description": "New task description (optional, max 1000 chars if provided)",
+            "maxLength": 1000,
+            "nullable": true
+          }
+        },
+        "required": ["user_id", "task_id"]
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "task_id": {
+            "type": "integer"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["updated"]
+          },
+          "title": {
+            "type": "string",
+            "description": "Updated task title"
+          }
+        },
+        "required": ["task_id", "status", "title"]
+      },
+      "errors": [
+        {
+          "code": "NOT_FOUND",
+          "message": "Task {task_id} not found"
+        },
+        {
+          "code": "AUTHORIZATION_ERROR",
+          "message": "Task does not belong to user"
+        },
+        {
+          "code": "VALIDATION_ERROR",
+          "message": "Title must be 1-200 characters if provided"
+        },
+        {
+          "code": "VALIDATION_ERROR",
+          "message": "Description max 1000 characters"
+        }
+      ]
+    }
+  ],
+  "agent_instructions": "You are a helpful task management assistant. When users mention adding, viewing, completing, deleting, or updating tasks, use the appropriate MCP tools. Always confirm actions with friendly responses and handle errors gracefully by asking for clarification."
+}
