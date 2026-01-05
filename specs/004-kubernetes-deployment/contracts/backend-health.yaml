@@ -1,0 +1,298 @@
+# Backend Health Check API Contract
+
+**Feature**: 004-kubernetes-deployment
+**Version**: 1.0.0
+**Date**: 2026-01-05
+
+## Overview
+
+Health check API contracts for Kubernetes liveness and readiness probes deployed in pods.
+
+---
+
+## Endpoints
+
+### 1. Liveness Check
+
+**Purpose**: Determines if backend pod is alive and functioning. If probe fails repeatedly, Kubernetes restarts the pod.
+
+**Method**: `GET`
+**Path**: `/health`
+**Authentication**: None (public endpoint for Kubernetes probes)
+
+#### Request
+
+No request body required.
+
+#### Response
+
+**Status**: `200 OK`
+
+```yaml
+status:
+  type: string
+  example: "healthy"
+  description: "Health status indicator"
+timestamp:
+  type: string
+  format: date-time
+  example: "2026-01-05T12:00:00Z"
+  description: "ISO 8601 timestamp when health check was performed"
+```
+
+**Response Example**:
+```json
+{
+  "status": "healthy",
+  "timestamp": "2026-01-05T12:00:00Z"
+}
+```
+
+#### Behavior
+
+- Returns `healthy` if backend application server is running
+- Returns `healthy` even if external dependencies (database, MCP server) are temporarily unavailable
+- Should not perform expensive operations or database queries
+- Should complete quickly (<100ms)
+
+#### Error Responses
+
+**Status**: `500 Internal Server Error`
+
+```yaml
+status:
+  type: string
+  example: "unhealthy"
+  description: "Health status indicator"
+error:
+  type: string
+  description: "Error message"
+  example: "Server internal error"
+```
+
+---
+
+### 2. Readiness Check
+
+**Purpose**: Determines if backend pod is ready to serve traffic. If probe fails, Kubernetes stops routing traffic to the pod.
+
+**Method**: `GET`
+**Path**: `/ready`
+**Authentication**: None (public endpoint for Kubernetes probes)
+
+#### Request
+
+No request body required.
+
+#### Response
+
+**Status**: `200 OK` (Ready) or `503 Service Unavailable` (Not Ready)
+
+##### Ready Response
+
+```yaml
+status:
+  type: string
+  example: "ready"
+  description: "Readiness status indicator"
+database:
+  type: string
+  example: "connected"
+  description: "Database connection status"
+mcp_server:
+  type: string
+  example: "running"
+  description: "MCP server status"
+```
+
+**Ready Response Example**:
+```json
+{
+  "status": "ready",
+  "database": "connected",
+  "mcp_server": "running"
+}
+```
+
+##### Not Ready Response
+
+**Status**: `503 Service Unavailable`
+
+```yaml
+status:
+  type: string
+  example: "not ready"
+  description: "Readiness status indicator"
+database:
+  type: string
+  example: "disconnected"
+  description: "Database connection status"
+mcp_server:
+  type: string
+  example: "stopped"
+  description: "MCP server status"
+```
+
+**Not Ready Response Example**:
+```json
+{
+  "status": "not ready",
+  "database": "disconnected",
+  "mcp_server": "stopped"
+}
+```
+
+#### Behavior
+
+- Returns `ready` only when:
+  - Backend server is running
+  - Database connection is active and can execute queries
+  - MCP server is initialized and operational
+- Returns `not ready` if any required dependency is unavailable
+- Database connection check should be lightweight (simple connection test)
+- Should complete quickly (<100ms for ready, <200ms for not ready)
+
+#### Error Responses
+
+**Status**: `500 Internal Server Error`
+
+```yaml
+status:
+  type: string
+  example: "error"
+  description: "Error occurred"
+error:
+  type: string
+  description: "Error message"
+  example: "Failed to check dependencies"
+```
+
+---
+
+## Health Probe Configuration
+
+### Liveness Probe Settings
+
+```yaml
+initialDelaySeconds: 30
+periodSeconds: 10
+timeoutSeconds: 5
+failureThreshold: 3
+```
+
+**Explanation**:
+- **initialDelaySeconds**: Wait 30 seconds after pod starts before first probe (allows application to fully initialize)
+- **periodSeconds**: Check every 10 seconds
+- **timeoutSeconds**: Probe must complete within 5 seconds
+- **failureThreshold**: After 3 consecutive failures (30 seconds total), restart the pod
+
+### Readiness Probe Settings
+
+```yaml
+initialDelaySeconds: 10
+periodSeconds: 5
+timeoutSeconds: 3
+failureThreshold: 3
+successThreshold: 1
+```
+
+**Explanation**:
+- **initialDelaySeconds**: Wait 10 seconds after pod starts before first probe (faster than liveness)
+- **periodSeconds**: Check every 5 seconds (more frequent than liveness for faster detection)
+- **timeoutSeconds**: Probe must complete within 3 seconds
+- **failureThreshold**: After 3 consecutive failures (15 seconds total), mark as not ready
+- **successThreshold**: Require 1 success to transition to ready
+
+---
+
+## Integration with Kubernetes
+
+### Pod Configuration
+
+Pods MUST configure these probes:
+
+```yaml
+spec:
+  containers:
+  - name: backend
+    livenessProbe:
+      httpGet:
+        path: /health
+        port: 8000
+      initialDelaySeconds: 30
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 3
+    readinessProbe:
+      httpGet:
+        path: /ready
+        port: 8000
+      initialDelaySeconds: 10
+      periodSeconds: 5
+      timeoutSeconds: 3
+      failureThreshold: 3
+      successThreshold: 1
+```
+
+### Expected Behavior
+
+1. **Pod Startup**
+   - 0-10s: Pod initializes, probes not running
+   - 10s: Readiness probe starts, returns `not ready` if dependencies not ready
+   - 30s: Liveness probe starts
+
+2. **Transition to Ready**
+   - Once dependencies (database, MCP server) are ready, readiness probe returns `ready`
+   - Kubernetes starts routing traffic to pod
+
+3. **During Normal Operation**
+   - Liveness probe runs every 10s, pod continues if healthy
+   - Readiness probe runs every 5s, pod continues if healthy
+
+4. **Dependency Failure**
+   - If database disconnects, readiness returns `not ready`
+   - Kubernetes stops routing new traffic
+   - Existing connections may drain gracefully
+   - Liveness probe continues, pod won't restart unless it also fails
+
+5. **Application Failure**
+   - If liveness probe fails 3 consecutive times, Kubernetes restarts pod
+   - Recovery depends on application startup and dependency initialization
+
+---
+
+## Testing Requirements
+
+### Unit Tests
+
+- Test `/health` endpoint returns `healthy` when server is running
+- Test `/health` endpoint handles concurrent requests
+- Test `/ready` returns `ready` when all dependencies are available
+- Test `/ready` returns `not ready` when any dependency is unavailable
+- Test error responses have correct status codes
+
+### Integration Tests
+
+- Test Kubernetes liveness probe recognizes `/health` endpoint
+- Test Kubernetes readiness probe recognizes `/ready` endpoint
+- Test pod restarts when liveness probe fails 3 times
+- Test pod marked not ready when readiness probe fails
+- Test pod marked ready when readiness probe succeeds
+
+---
+
+## Non-Functional Requirements
+
+- **Performance**: Health checks must complete in <100ms (ready), <200ms (not ready)
+- **Reliability**: Health check endpoints must be available 99.9% of time
+- **Observability**: Failed health checks should log error context
+- **Resource Efficiency**: Health checks should be lightweight (no heavy queries)
+
+---
+
+## Notes
+
+- Database connection check should use a lightweight query (e.g., `SELECT 1` or connection test) rather than a full query
+- MCP server status check should verify the process is running without waiting for full initialization
+- Health endpoints are public and require no authentication
+- Both endpoints are compatible with Kubernetes HTTPGet probe type
