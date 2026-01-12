@@ -9,6 +9,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/hooks/useAuth';
+import { cn } from '@/lib/utils';
 
 export default function HomePage() {
   const router = useRouter();
@@ -174,8 +175,8 @@ export default function HomePage() {
                     <div className={cn(
                       "w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all duration-500",
                       task.completed
-                        ? 'bg-primary border-primary shadow-lg shadow-primary/40'
-                        : 'border-border/60 group-hover:border-primary/50'
+                        ? "bg-primary border-primary shadow-lg shadow-primary/40"
+                        : "border-border/60 group-hover:border-primary/50"
                     )}>
                       {task.completed && (
                         <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">

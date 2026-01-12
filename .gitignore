@@ -87,3 +87,9 @@ specs/*/tasks.md.backup
 history/temp/
 .vercel/
 .turbo/
+
+# Docker
+*.dockerignore
+.docker/
+helm/*/charts/
+helm/*/Chart.lock

@@ -345,7 +345,7 @@ export default function ChatWindow({
 
                 {message.role === 'assistant' && (
                   <div className="absolute top-0 right-0 p-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                     <Button variant="ghost" size="icon" className="w-6 h-6 hover:bg-primary/10" onClick={() => navigator.clipboard.writeText(message.content)}>
+                     <Button variant="ghost" size="sm" className="w-6 h-6 hover:bg-primary/10 p-0" onClick={() => navigator.clipboard.writeText(message.content)}>
                         <div className="w-1.5 h-1.5 rounded-full bg-primary/40" />
                      </Button>
                   </div>

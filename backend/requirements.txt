@@ -1,13 +1,13 @@
 # FastAPI and ASGI server
 fastapi==0.109.0
-uvicorn[standard]==0.27.0
+uvicorn[standard]>=0.31.1
 
 # Database ORM
 sqlmodel==0.0.14
-psycopg2-binary==2.9.9
+psycopg2-binary>=2.9.9
 
 # Data validation
-pydantic==2.5.3
+pydantic[email]==2.11.1
 pydantic-settings==2.5.2
 
 # JWT authentication
@@ -16,7 +16,7 @@ passlib[bcrypt]==1.7.4
 bcrypt==4.1.2
 
 # CORS
-python-multipart==0.0.6
+python-multipart>=0.0.9
 
 # Testing
 pytest==7.4.4
