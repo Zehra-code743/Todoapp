@@ -1,0 +1,30 @@
+Todo AI Chatbot has been deployed successfully!
+
+Your release is named {{ .Release.Name }}.
+
+To get more information about your release:
+
+1. Check the deployment status:
+   kubectl get pods -l app.kubernetes.io/instance={{ .Release.Name }}
+
+2. Check services:
+   kubectl get services -l app.kubernetes.io/instance={{ .Release.Name }}
+
+3. Access the application:
+   Frontend URL:
+   {{- if eq .Values.frontend.service.type "NodePort" }}
+   kubectl get service {{ include "todo-app.fullname" . }}-frontend -o jsonpath='{.spec.ports[0].nodePort}'
+   Or use: minikube service {{ include "todo-app.fullname" . }}-frontend --url
+   {{- else }}
+   External IP pending...
+   {{- end }}
+
+4. View logs:
+   Frontend: kubectl logs -l app={{ include "todo-app.name" . }}-frontend
+   Backend:  kubectl logs -l app={{ include "todo-app.name" . }}-backend
+
+5. Check health status:
+   kubectl get pods -w
+
+To uninstall:
+   helm uninstall {{ .Release.Name }}

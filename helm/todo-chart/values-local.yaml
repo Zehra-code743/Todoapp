@@ -1,0 +1,35 @@
+# Local Minikube overrides for todo-app Helm chart
+
+# Single replica for local development
+frontend:
+  replicaCount: 1
+
+backend:
+  replicaCount: 1
+
+# Lower resource limits for local
+frontend:
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "100m"
+    limits:
+      memory: "256Mi"
+      cpu: "250m"
+
+backend:
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "250m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+
+# Local environment
+global:
+  environment: local
+
+# Development log level
+config:
+  logLevel: debug

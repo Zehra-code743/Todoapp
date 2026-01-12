@@ -1,0 +1,27 @@
+# Charts archives
+*.tgz
+
+# Helm generated files
+charts/
+Chart.lock
+
+# IDE
+.idea/
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+*.tmp
+*.swp
+*~
+
+# Logs
+*.log
+
+# Environment variables
+.env
+.env.*
+
+# Git
+.git/

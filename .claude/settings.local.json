@@ -9,7 +9,11 @@
       "Skill(sp.adr)",
       "Bash(powershell -ExecutionPolicy Bypass -Command \".specify/scripts/powershell/check-prerequisites.ps1 -Json\")",
       "Bash(powershell -ExecutionPolicy Bypass -Command \".specify/scripts/powershell/check-prerequisites.ps1 -Json -RequireTasks -IncludeTasks\")",
-      "Bash(python:*)"
+      "Bash(python:*)",
+      "Bash(git fetch:*)",
+      "Bash(mkdir:*)",
+      "Bash(git rev-parse:*)",
+      "Bash(test:*)"
     ]
   }
 }

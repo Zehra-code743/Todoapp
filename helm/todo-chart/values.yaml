@@ -1,0 +1,123 @@
+# Default values for todo-app Helm chart
+
+# Frontend configuration
+frontend:
+  enabled: true
+  replicaCount: 2
+  image:
+    repository: todo-frontend
+    tag: local
+    pullPolicy: IfNotPresent
+
+  service:
+    type: NodePort
+    port: 80
+    nodePort: 30080
+
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "250m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+
+  livenessProbe:
+    httpGet:
+      path: /
+      port: http
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+
+  readinessProbe:
+    httpGet:
+      path: /
+      port: http
+    initialDelaySeconds: 10
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 3
+    successThreshold: 1
+
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+# Backend configuration
+backend:
+  enabled: true
+  replicaCount: 2
+  image:
+    repository: todo-backend
+    tag: local
+    pullPolicy: IfNotPresent
+
+  service:
+    type: ClusterIP
+    port: 8000
+
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "500m"
+    limits:
+      memory: "1Gi"
+      cpu: "1000m"
+
+  livenessProbe:
+    httpGet:
+      path: /health
+      port: http
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+
+  readinessProbe:
+    httpGet:
+      path: /ready
+      port: http
+    initialDelaySeconds: 10
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 3
+    successThreshold: 1
+
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+# Global configuration
+global:
+  environment: production
+
+# Configuration
+config:
+  backendUrl: http://todo-backend:8000
+  logLevel: info
+
+# Secret references (must be created manually)
+secrets:
+  create: true
+  name: todo-secrets
+  databaseUrl:
+    name: database-url
+    key: database-url
+  openaiApiKey:
+    name: openai-api-key
+    key: openai-api-key
+  jwtSecret:
+    name: jwt-secret
+    key: jwt-secret
+  betterAuthSecret:
+    name: better-auth-secret
+    key: better-auth-secret
+
+# Deployment strategy
+deploymentStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxSurge: 1
+    maxUnavailable: 0
