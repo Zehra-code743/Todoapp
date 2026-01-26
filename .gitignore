@@ -93,3 +93,36 @@ history/temp/
 .docker/
 helm/*/charts/
 helm/*/Chart.lock
+
+# Dapr
+.dapr/
+bin/
+*.binary
+
+# Kubernetes
+.kube/
+kubeconfig*
+*.secret.yaml
+secrets/
+
+# Database
+*.db
+*.db-journal
+
+# Kafka
+.kafka/
+*.log*
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfvars
+.terraform.lock.hcl
+
+# Services
+services/*/__pycache__/
+services/*/src/*.pyc
+services/*/src/__pycache__/
+services/*/node_modules/
+services/*/dist/
+services/*/build/

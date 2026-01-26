@@ -8,10 +8,10 @@ from sqlmodel import Session
 import uuid
 
 from src.api.deps import get_current_user
-from models.chat import ChatRequest, ChatResponse
-from services.chat_service import ChatService
-from services.queue_service import RateLimitError, QueueTimeoutError
-from config.logging import logger
+from src.models.chat import ChatRequest, ChatResponse
+from src.services.chat_service import ChatService
+from src.services.queue_service import RateLimitError, QueueTimeoutError
+from src.config.logging import logger
 from src.db import get_session
 
 

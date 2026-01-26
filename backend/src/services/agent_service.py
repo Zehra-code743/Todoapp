@@ -7,7 +7,7 @@ Integrates with MCP server for tool execution.
 from openai import AsyncOpenAI
 import httpx
 from typing import List, Dict, Any
-from config.logging import logger
+from src.config.logging import logger
 import os
 from src.config import settings
 

@@ -1,0 +1,63 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: todo-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    cert-manager.io/cluster-issuer: letsencrypt-prod  # Assuming cert-manager is installed
+spec:
+  tls:
+  - hosts:
+    - todo.example.com  # Replace with your actual domain
+    secretName: todo-tls-secret
+  rules:
+  - host: todo.example.com  # Replace with your actual domain
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: chat-service
+            port:
+              number: 8001
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: task-service
+            port:
+              number: 8000
+      - path: /healthz
+        pathType: Exact
+        backend:
+          service:
+            name: task-service
+            port:
+              number: 8000
+---
+# Alternative Ingress for different services
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: todo-api-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: task-service
+            port:
+              number: 8000
+      - path: /health
+        pathType: Prefix
+        backend:
+          service:
+            name: task-service
+            port:
+              number: 8000

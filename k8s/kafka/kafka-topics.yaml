@@ -1,0 +1,38 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: task-events
+  labels:
+    strimzi.io/cluster: todo-kafka-cluster
+spec:
+  partitions: 3
+  replicas: 1
+  config:
+    retention.ms: 604800000
+    segment.bytes: 1073741824
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: reminders
+  labels:
+    strimzi.io/cluster: todo-kafka-cluster
+spec:
+  partitions: 3
+  replicas: 1
+  config:
+    retention.ms: 604800000
+    segment.bytes: 1073741824
+---
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: task-updates
+  labels:
+    strimzi.io/cluster: todo-kafka-cluster
+spec:
+  partitions: 3
+  replicas: 1
+  config:
+    retention.ms: 604800000
+    segment.bytes: 1073741824

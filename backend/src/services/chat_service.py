@@ -9,12 +9,12 @@ from sqlmodel import Session, select
 from datetime import datetime
 import json
 
-from models.conversation import Conversation, Message, MessageRole
-from models.chat import ChatRequest, ChatResponse, ToolCall
-from services.agent_service import create_chat_completion
-from services.queue_service import process_with_backoff, RateLimitError
+from src.models.conversation import Conversation, Message, MessageRole
+from src.models.chat import ChatRequest, ChatResponse, ToolCall
+from src.services.agent_service import create_chat_completion
+from src.services.queue_service import process_with_backoff, RateLimitError
 from mcp_tools.tools.add_task import add_task
-from config.logging import logger
+from src.config.logging import logger
 import uuid
 
 

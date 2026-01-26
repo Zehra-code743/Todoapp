@@ -1,0 +1,20 @@
+{
+  "database": {
+    "host": "${DB_HOST:-localhost}",
+    "port": "${DB_PORT:-5432}",
+    "name": "${DB_NAME:-todoapp}",
+    "username": "${DB_USER:-postgres}",
+    "password": "${DB_PASSWORD:-postgres}"
+  },
+  "kafka": {
+    "brokers": "${KAFKA_BROKERS:-localhost:9092}",
+    "consumer_group": "todo-services-group"
+  },
+  "dapr": {
+    "http_port": "${DAPR_HTTP_PORT:-3500}",
+    "grpc_port": "${DAPR_GRPC_PORT:-50001}"
+  },
+  "logging": {
+    "level": "${LOG_LEVEL:-INFO}"
+  }
+}

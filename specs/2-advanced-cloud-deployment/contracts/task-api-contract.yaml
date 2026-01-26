@@ -1,0 +1,395 @@
+openapi: 3.0.3
+info:
+  title: Advanced Todo API
+  description: API for managing advanced todo features including recurring tasks, due dates, reminders, and search
+  version: 1.0.0
+servers:
+  - url: http://localhost:8000
+    description: Local development server
+  - url: https://api.todoapp.com
+    description: Production server
+
+paths:
+  /api/v1/tasks:
+    get:
+      summary: List tasks with filtering and sorting
+      parameters:
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [all, pending, completed]
+            default: all
+        - name: priority
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [low, medium, high, urgent]
+        - name: sort_by
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [due_date, priority, created_at, title]
+        - name: sort_order
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: asc
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 20
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: List of tasks
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  tasks:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Task'
+                  total_count:
+                    type: integer
+    post:
+      summary: Create a new task
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTaskRequest'
+      responses:
+        '201':
+          description: Task created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+
+  /api/v1/tasks/{task_id}:
+    get:
+      summary: Get a specific task
+      parameters:
+        - name: task_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Task details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '404':
+          description: Task not found
+    put:
+      summary: Update a task
+      parameters:
+        - name: task_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTaskRequest'
+      responses:
+        '200':
+          description: Task updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+    delete:
+      summary: Delete a task
+      parameters:
+        - name: task_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Task deleted successfully
+        '404':
+          description: Task not found
+
+  /api/v1/tasks/{task_id}/complete:
+    post:
+      summary: Mark task as complete
+      parameters:
+        - name: task_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Task marked as complete
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+
+  /api/v1/recurring-tasks:
+    post:
+      summary: Create a recurring task
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRecurringTaskRequest'
+      responses:
+        '201':
+          description: Recurring task created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+
+  /api/v1/reminders/set-due-date:
+    post:
+      summary: Set due date and schedule reminder
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetDueDateRequest'
+      responses:
+        '200':
+          description: Due date set and reminder scheduled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+
+  /api/v1/search/tasks:
+    get:
+      summary: Search tasks by keyword and filters
+      parameters:
+        - name: keyword
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: priority
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [low, medium, high, urgent]
+        - name: tag
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: due_date_start
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - name: due_date_end
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  tasks:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Task'
+                  total_count:
+                    type: integer
+
+components:
+  schemas:
+    Task:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        completed:
+          type: boolean
+        priority:
+          type: string
+          enum: [low, medium, high, urgent]
+        tags:
+          type: array
+          items:
+            type: string
+        category:
+          type: string
+        due_date:
+          type: string
+          format: date-time
+        reminder_settings:
+          type: object
+        reminder_sent:
+          type: boolean
+        is_recurring:
+          type: boolean
+        recurrence_pattern:
+          $ref: '#/components/schemas/RecurrencePattern'
+        parent_task_id:
+          type: integer
+        next_occurrence_date:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        completed_at:
+          type: string
+          format: date-time
+      required:
+        - id
+        - user_id
+        - title
+        - completed
+
+    CreateTaskRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        priority:
+          type: string
+          enum: [low, medium, high, urgent]
+        tags:
+          type: array
+          items:
+            type: string
+        due_date:
+          type: string
+          format: date-time
+      required:
+        - title
+
+    UpdateTaskRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        priority:
+          type: string
+          enum: [low, medium, high, urgent]
+        tags:
+          type: array
+          items:
+            type: string
+        due_date:
+          type: string
+          format: date-time
+
+    CreateRecurringTaskRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        priority:
+          type: string
+          enum: [low, medium, high, urgent]
+        tags:
+          type: array
+          items:
+            type: string
+        recurrence_pattern:
+          $ref: '#/components/schemas/RecurrencePattern'
+        first_occurrence_date:
+          type: string
+          format: date-time
+      required:
+        - title
+        - recurrence_pattern
+        - first_occurrence_date
+
+    SetDueDateRequest:
+      type: object
+      properties:
+        task_id:
+          type: integer
+        due_date:
+          type: string
+          format: date-time
+        reminder_enabled:
+          type: boolean
+          default: true
+        reminder_advance_minutes:
+          type: integer
+          default: 60
+      required:
+        - task_id
+        - due_date
+
+    RecurrencePattern:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [daily, weekly, monthly, custom]
+        interval:
+          type: number
+        days_of_week:
+          type: array
+          items:
+            type: number
+        day_of_month:
+          type: number
+        end_condition:
+          type: object
+          properties:
+            type:
+              type: string
+              enum: [never, after_n_occurrences, by_date]
+            value:
+              oneOf:
+                - type: number
+                - type: string
+                  format: date-time

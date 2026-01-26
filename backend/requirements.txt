@@ -28,6 +28,9 @@ openai==1.59.3
 mcp==1.25.0
 structlog==24.1.0
 
+# Kafka
+kafka-python==2.0.2
+
 # Development
 black==23.12.1
 isort==5.13.2
