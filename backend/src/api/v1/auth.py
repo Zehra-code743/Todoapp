@@ -135,9 +135,10 @@ async def get_current_user_info(
         404: If user not found in database
     """
     try:
-        # Query user from database
-        statement = select(User).where(User.id == current_user_id)
-        user = session.exec(statement).first()
+        # Use the auth service function that handles SQL properly
+        from src.services.auth_service import get_user_by_id
+
+        user = get_user_by_id(session, current_user_id)
 
         if not user:
             raise HTTPException(

@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chat-service
+  labels:
+    app: chat-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: chat-service
+  template:
+    metadata:
+      labels:
+        app: chat-service
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "chat-service"
+        dapr.io/app-port: "8001"
+        dapr.io/components-path: "/dapr-components"
+        dapr.io/log-level: "info"
+        dapr.io/app-protocol: "http"
+        dapr.io/app-max-concurrency: "1"
+    spec:
+      containers:
+      - name: chat-service
+        image: todo-chat-service:latest
+        ports:
+        - containerPort: 8001
+        env:
+        - name: TASK_SERVICE_URL
+          value: "http://task-service:8000"
+        - name: OPENAI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: openai-api-key
+              key: apiKey
+        - name: LOG_LEVEL
+          value: "INFO"
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: chat-service
+  labels:
+    app: chat-service
+spec:
+  selector:
+    app: chat-service
+  ports:
+    - protocol: TCP
+      port: 8001
+      targetPort: 8001
+  type: ClusterIP

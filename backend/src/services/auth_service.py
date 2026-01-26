@@ -124,13 +124,12 @@ def create_user(session: Session, email: str, name: str, password: str):
     created = datetime.utcnow()
 
     # Insert user
-    query = text("""
+    insert_query = text("""
         INSERT INTO users (id, email, name, password_hash, created_at, updated_at)
         VALUES (:id, :email, :name, :password_hash, :created_at, :updated_at)
-        RETURNING id, email, name, created_at, updated_at
     """)
 
-    result = session.exec(query, params={
+    session.exec(insert_query, params={
         "id": user_id,
         "email": email,
         "name": name,
@@ -140,6 +139,15 @@ def create_user(session: Session, email: str, name: str, password: str):
     })
 
     session.commit()
+
+    # Query the inserted user
+    select_query = text("""
+        SELECT id, email, name, password_hash, created_at, updated_at
+        FROM users
+        WHERE id = :id
+    """)
+
+    result = session.exec(select_query, params={"id": user_id}).first()
 
     # Return simple object instead of User model to avoid mapper issues
     class SimpleUser:
@@ -151,7 +159,7 @@ def create_user(session: Session, email: str, name: str, password: str):
             self.created_at = created_at
             self.updated_at = updated_at
 
-    return SimpleUser(user_id, email, name, password_hash, created, created)
+    return SimpleUser(result[0], result[1], result[2], result[3], result[4], result[5])
 
 
 def authenticate_user(session: Session, email: str, password: str):

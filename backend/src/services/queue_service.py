@@ -10,7 +10,7 @@ Implements the queueing strategy from research.md Section 5:
 from asyncio import Queue, sleep
 from typing import Any, Callable, TypeVar
 from datetime import datetime, timedelta
-from config.logging import logger
+from src.config.logging import logger
 import asyncio
 
 

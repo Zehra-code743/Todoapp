@@ -7,7 +7,7 @@ Wraps existing TaskService.create_task() from Phase II.
 from typing import Dict, Any, Optional
 from sqlmodel import Session
 from src.services.task_service import TaskService
-from config.logging import logger
+from src.config.logging import logger
 
 
 async def add_task(

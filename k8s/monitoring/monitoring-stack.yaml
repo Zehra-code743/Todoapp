@@ -1,0 +1,174 @@
+# Monitoring Stack for Todo Application
+---
+# Prometheus Operator CRDs would normally be applied first
+# This example assumes the Prometheus operator is already installed
+
+# Service Monitor for our services
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: todo-services-monitor
+  namespace: default
+  labels:
+    app: todo-monitoring
+spec:
+  selector:
+    matchLabels:
+      app: task-service
+  endpoints:
+  - port: http
+    interval: 30s
+    path: /metrics
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: chat-service-monitor
+  namespace: default
+  labels:
+    app: todo-monitoring
+spec:
+  selector:
+    matchLabels:
+      app: chat-service
+  endpoints:
+  - port: http
+    interval: 30s
+    path: /metrics
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: notification-service-monitor
+  namespace: default
+  labels:
+    app: todo-monitoring
+spec:
+  selector:
+    matchLabels:
+      app: notification-service
+  endpoints:
+  - port: http
+    interval: 30s
+    path: /metrics
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: recurring-service-monitor
+  namespace: default
+  labels:
+    app: todo-monitoring
+spec:
+  selector:
+    matchLabels:
+      app: recurring-service
+  endpoints:
+  - port: http
+    interval: 30s
+    path: /metrics
+---
+# Prometheus instance
+apiVersion: monitoring.coreos.com/v1
+kind: Prometheus
+metadata:
+  name: todo-prometheus
+  namespace: default
+spec:
+  serviceAccountName: prometheus
+  serviceMonitorSelector:
+    matchLabels:
+      app: todo-monitoring
+  resources:
+    requests:
+      memory: 400Mi
+    limits:
+      memory: 800Mi
+  enableAdminAPI: false
+---
+# Alertmanager
+apiVersion: monitoring.coreos.com/v1
+kind: Alertmanager
+metadata:
+  name: todo-alertmanager
+  namespace: default
+spec:
+  replicas: 1
+  resources:
+    requests:
+      memory: 100Mi
+    limits:
+      memory: 200Mi
+---
+# Grafana deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grafana
+  template:
+    metadata:
+      labels:
+        app: grafana
+    spec:
+      containers:
+      - name: grafana
+        image: grafana/grafana:latest
+        ports:
+        - containerPort: 3000
+        env:
+        - name: GF_SECURITY_ADMIN_PASSWORD
+          value: "admin123"  # Change this in production
+        volumeMounts:
+        - name: grafana-storage
+          mountPath: /var/lib/grafana
+      volumes:
+      - name: grafana-storage
+        emptyDir: {}
+---
+# Grafana Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana
+  namespace: default
+spec:
+  ports:
+  - port: 3000
+    targetPort: 3000
+  selector:
+    app: grafana
+  type: LoadBalancer
+---
+# Prometheus Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus-service
+  namespace: default
+spec:
+  ports:
+  - port: 9090
+    targetPort: 9090
+  selector:
+    prometheus: todo-prometheus
+  type: ClusterIP
+---
+# Alertmanager Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: alertmanager-service
+  namespace: default
+spec:
+  ports:
+  - port: 9033
+    targetPort: 9033
+  selector:
+    alertmanager: todo-alertmanager
+  type: ClusterIP

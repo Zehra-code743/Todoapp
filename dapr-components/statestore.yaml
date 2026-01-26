@@ -1,0 +1,12 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: todo-statestore
+spec:
+  type: state.postgresql
+  version: v1
+  metadata:
+  - name: connectionString
+    value: "host=postgres user=postgres password=postgres dbname=todoapp port=5432 sslmode=disable"
+  - name: versioningColumnName
+    value: "_dapr_version"
