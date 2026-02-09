@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from typing import List
+from typing import List, Optional
 from sqlmodel import Session, select
 from src.db import get_session
 from src.models.report import Report, ReportCreate, ReportRead
