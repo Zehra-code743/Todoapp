@@ -25,6 +25,7 @@ async def lifespan(app: FastAPI):
 
     # Startup: Create all tables
     SQLModel.metadata.create_all(engine)
+    print(f"DEBUG: Allowed CORS origins: {settings.cors_origins_list}")
 
     yield
 
