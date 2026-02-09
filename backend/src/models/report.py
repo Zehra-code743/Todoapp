@@ -16,7 +16,7 @@ class ReportBase(SQLModel):
 
 class Report(ReportBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    user_id: int = Field(foreign_key="user.id")
+    user_id: str = Field(foreign_key="users.id")
 
     # Relationship back to User (needs to be defined in User model too)
     user: "User" = Relationship(back_populates="reports")
@@ -28,4 +28,4 @@ class ReportCreate(ReportBase):
 
 class ReportRead(ReportBase):
     id: int
-    user_id: int
+    user_id: str
