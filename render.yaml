@@ -17,4 +17,4 @@ services:
         value: "7"
       - key: ENV
         value: production
-    regions: oregon # or any other region
+    region: oregon

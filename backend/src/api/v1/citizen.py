@@ -42,3 +42,21 @@ async def get_all_reports(
     statement = select(Report)
     results = session.exec(statement)
     return results.all()
+
+
+@router.post("/reports/summarize", tags=["AI"])
+async def summarize_reports(
+    category: Optional[str] = None,
+    current_user: User = Depends(get_current_user),
+    session: Session = Depends(get_session)
+):
+    """
+    AI Placeholder: Summarize civic issues for a category using LLM.
+    In a real implementation, this would fetch reports and use GPT-4/Claude to generate a summary.
+    """
+    # Placeholder logic
+    return {
+        "summary": "AI Summarization is currently in development. Soon you will see generated insights here.",
+        "category_analyzed": category or "all",
+        "status": "placeholder"
+    }
