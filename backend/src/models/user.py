@@ -23,6 +23,7 @@ class User(SQLModel, table=True):
 
     # Relationships
     tasks: List["Task"] = Relationship(back_populates="user")
+    reports: List["Report"] = Relationship(back_populates="user")
 
     class Config:
         json_schema_extra = {
