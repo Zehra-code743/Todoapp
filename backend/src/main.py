@@ -83,12 +83,13 @@ async def root():
 
 
 # Import and include routers
-from src.api.v1 import health, tasks, auth, chat
+from src.api.v1 import health, tasks, auth, chat, citizen
 from src.api.v1 import recurring_tasks, reminders, search
 
 app.include_router(health.router, tags=["Health"])
 app.include_router(auth.router, prefix="/api", tags=["Authentication"])
 app.include_router(tasks.router, prefix="/api", tags=["Tasks"])
+app.include_router(citizen.router, prefix="/api", tags=["Citizen Reporting"])
 app.include_router(recurring_tasks.router, prefix="/api/v1", tags=["Recurring-Tasks"])
 app.include_router(reminders.router, prefix="/api/v1", tags=["Reminders"])
 app.include_router(search.router, prefix="/api/v1", tags=["Search"])
