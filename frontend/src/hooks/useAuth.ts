@@ -23,7 +23,8 @@ export interface UseAuthReturn {
   signOut: () => Promise<void>;
 }
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'https://todo-backend-wwws.onrender.com').replace(/\/$/, '');
+console.log('[useAuth] API URL configured as:', API_URL);
 
 /**
  * Hook for managing authentication state with JWT tokens
